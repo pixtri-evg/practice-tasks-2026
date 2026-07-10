@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <numeric>
+using namespace std;
+
+const long long MOD = 1e9 + 7;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);                                          // ускоряем ввод-вывод
+    
+    int n;
+    cin >> n;                                                   // считываем количество планет
+    vector<long long> v(n);                                     // вектор для хранения периодов
+
+    for (int i = 0; i < n; i++) {
+        cin >> v[i];                                            // считываем периоды обращения
+    }
+
+    long long result = v[0];                                    // начинаем с первого периода
+    for (int i = 1; i < n; i++) {
+        // вычисляем НОК(result, v[i]) = result / НОД(result, v[i]) * v[i]
+        result = result / gcd(result, v[i]) * v[i];          
+    }
+
+    cout << result << endl;                                   
+    
+    return 0;
+}
