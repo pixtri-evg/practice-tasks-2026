@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);                                          // ускоряем ввод-вывод
+    
+    int n, m, k;
+    cin >> n >> m >> k;                                        // считываем количество вершин, рёбер и стартовую вершину
+    
+    vector<vector<int>> adj(n + 1);                            // список смежности (индексация с 1)
+
+    // считываем рёбра и строим граф
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);                                   // добавляем ребро u-v
+        adj[v].push_back(u);                                   // граф неориентированный
+    }
+    
+    vector<int> dist(n + 1, -1);                               // массив расстояний (-1 = не посещена)
+    dist[k] = 0;                                               // расстояние до стартовой вершины = 0
+
+    queue<int> q;                                              // очередь для BFS
+    q.push(k);                                                 // начинаем обход с вершины k
+
+    while (!q.empty()) {
+        int cur = q.front();                                   // текущая вершина
+        q.pop();
+
+        // перебираем всех соседей текущей вершины
+        for (int next : adj[cur]) {
+            if (dist[next] == -1) {                            // если сосед ещё не посещён
+                dist[next] = dist[cur] + 1;                    // обновляем расстояние
+                q.push(next);                                  // добавляем в очередь для дальнейшего обхода
+            }
+        }
+    }
+
+    // выводим расстояния от 1 до n
+    for (int i = 1; i <= n; i++) {
+        cout << dist[i] << " ";
+    }
+    cout << endl;
+    return 0;
+}
