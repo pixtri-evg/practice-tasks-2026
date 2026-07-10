@@ -1,0 +1,40 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+const long long MOD = 1e9 + 7;                                  // модуль для вычислений
+
+int main() {
+    int n, k, m;
+    cin >> n >> k >> m;                                         // считываем n, k и количество опасных точек
+    
+    vector<bool> dang(n + 1, false);                            // массив для отметки опасных точек
+    for (int i = 0; i < m; i++) {
+        int x;
+        cin >> x;
+        dang[x] = true;                                         // отмечаем опасные точки
+    }
+
+    vector<long long> dp(n + 1);                                // dp[i] - количество способов добраться до i
+    dp[0] = 1;                                                  // базовый случай: 1 способ оказаться в старте
+
+    long long wind_sum = dp[0];                                 // сумма dp[i-k]...dp[i-1] для текущего i
+
+    for (int i = 1; i <= n; i++) {
+        if (dang[i])                                            // если точка опасна
+            dp[i] = 0;                                          // способов попасть в неё нет
+        else
+            dp[i] = wind_sum;                                   // иначе все способы из предыдущих k точек
+
+        wind_sum += dp[i];                                      // добавляем текущую точку в окно
+        if (i - k >= 0) {                                       // если точка вышла за окно
+            wind_sum -= dp[i - k];                              // удаляем её из суммы
+        }
+        wind_sum = ((wind_sum % MOD) + MOD) % MOD;              // приводим к положительному значению по модулю
+    }
+
+    cout << dp[n] << endl;                                      // выводим ответ
+
+    return 0;
+}
