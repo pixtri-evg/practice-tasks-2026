@@ -1,0 +1,32 @@
+#include <iostream>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int n;
+    long long x;
+    cin >> n;                                                   // считываем количество кланов
+
+    // создаём минимальную кучу для хранения размеров кланов
+    priority_queue<long long, std::vector<long long>, std::greater<long long>> min_pq;
+    
+    for (int i = 0; i < n; i++) {
+        cin >> x;                                               // считываем размер каждого клана
+        min_pq.push(x);                                         // добавляем в кучу
+    }
+
+    // выполняем n-1 объединение
+    for (int i = 0; i < n - 1; i++) {
+        long long x = min_pq.top();                             // извлекаем наименьший клан
+        min_pq.pop();
+        long long y = min_pq.top();                             // извлекаем второй наименьший клан
+        min_pq.pop();
+        
+        cout << x << " " << y << endl;                          // выводим пару в порядке возрастания
+        
+        min_pq.push(x + y);                                     // добавляем объединённый клан обратно
+    }
+
+    return 0;
+}
